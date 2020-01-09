@@ -1,0 +1,9 @@
+name: doulatov_lab_env
+channels:
+  - r
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.7.5
+  - jupyter=6.0.2
+  - r-base3.6.2
