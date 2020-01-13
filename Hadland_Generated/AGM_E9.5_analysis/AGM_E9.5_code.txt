@@ -12,10 +12,15 @@ library(magrittr)
 library(ggplot2)
 library(reticulate)
 
-## Preprocessing and clustering...
-cds <- load_cellranger_data("~/Downloads/Hadland_Generated/AGM_E9.5")
-RES_DIR <- file.path("~/Downloads/Hadland_Generated/AGM_E9.5_analysis")
-cds = preprocess_cds(cds, num_dim =7)
+## Loading data to cds...
+cds <- load_cellranger_data("~/doulatov_lab/Hadland_Generated/AGM_E9.5")
+RES_DIR <- file.path("~/doulatov_lab/Hadland_Generated/AGM_E9.5_analysis")
+
+## Finding number of dimensions...
+cds = preprocess_cds(cds, num_dim=50)
+plot_pc_variance_explained(cds) ## locate plateau in the graph!
+
+## Clustering...
 cds = reduce_dimension(cds)
 cds <- cluster_cells(cds, resolution = .0009)
 cluster <- clusters(cds)
@@ -27,3 +32,4 @@ cds <- learn_graph(cds)
 ## Plotting...
 plot_cells(cds)
 saveRDS(cds, file.path(RES_DIR, "AGM_E9.5_clusters.rds"))
+
