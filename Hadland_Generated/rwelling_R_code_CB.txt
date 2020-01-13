@@ -1,0 +1,103 @@
+##Clear environment
+rm(list = ls())
+
+##Load monocle3 and all other required packages
+library(monocle3) 
+library(VGAM) 
+library(viridis)
+library(stringr)
+library(tibble)
+library(dplyr)
+library(magrittr)
+library(ggplot2)
+library(reticulate)
+
+##This is the file path for Rachel's computer; will need to update for your own use
+##Loads data for Scrambled control (there is also data for DLK1 knockdown with shDLK1)
+cds <- load_cellranger_data("~/Docs/Rotation3/Hadland/scRNAseq_Data/CB1/Scr")
+
+##where analyses will be stored
+RES_DIR <- file.path("~/Docs/Rotation3/Hadland/scRNAseq_Data/CB1_analysis")
+
+cds = preprocess_cds(cds, num_dim =7) 
+##dimensions will be different per 10x file 
+
+cds = reduce_dimension(cds) ## THIS REDUCES DIMENSIONS DOWN TO X AND Y FOR 				GRAPHING...
+cds <- cluster_cells(cds, resolution = .0009)
+##resolution will be different per sample, change it around to get a 
+##different number of clusters
+
+##adds a "cluster" column to colData VERY HELPFUL, needed to get group_cells_by = 
+##"cluster" to work
+cluster <- clusters(cds)
+pData(cds)$cluster <- cluster   
+
+##DO NOT NEED; required if want pseudotime line trajectory
+cds <- learn_graph(cds)
+
+plot_cells(cds)
+saveRDS(cds, file.path(RES_DIR, "CB1_Dlk_Scr_Clust.rds")) ##save your clustered cds file, name it as you like
+
+############################################# 
+##start here after saving clustered file
+
+##if closed R, load the following libraries 
+library(monocle3) 
+library(VGAM) 
+library(viridis)
+library(stringr)
+library(tibble)
+library(dplyr)
+library(magrittr)
+library(ggplot2)
+library(reticulate)
+
+RES_DIR <- file.path("~/Docs/Rotation3/Hadland/scRNAseq_Data/CB1_analysis")
+cds <- readRDS(file.path(RES_DIR, "CB1_Dlk_Scr_Clust.RDS"))
+
+##plotting cell cluster; will also increase dot size
+plot_cells(cds, cell_size = 1, color_cells_by = "cluster") 
+##plotting cell partition; will number groups
+plot_cells(cds, group_cells_by = c("partition"), color_cells_by = "partition", group_label_size = 5)
+
+
+##formatting preference for plotting cells make sure library(gg2plot) 
+##is opened, play around with it to get different formatting/labeling 
+##of axes/legends/titles
+simple_theme <-  theme(
+  legend.position = "none",
+  panel.grid = element_blank(),
+  axis.title = element_blank(),
+  axis.text = element_blank(),
+  axis.ticks = element_blank(),
+  axis.line.x = element_blank(),
+  axis.line.y = element_blank())
+
+##plots cells by expression of a gene or multiple genes, c(x, y, ...)
+
+##open the virdis and gg2plot libraries to have "magma" and simple_theme
+##make sure to create the simple_theme object before "calling" it
+
+##gene list from cord blood analysis, note that mouse genes 
+##only have the first letter capatilized
+##these were the top conserved markers between CB and AGM
+plot_cells(cds, genes=c("MAGED2", "YPEL3", "IFITM3", "SOCS2", "EVA1B", 
+                        "VIM", "PNRC1", "RBPMS", "SPINT2", "BNIP3L", "ALDH2", 						"NPC2", "EIF3E", "LAPTM5", "ITM2B"), cell_size = 1)+
+                        scale_color_viridis(option = "magma") 
+
+##these are a list of epigenetic factors that have known connections to
+##hematopoiesis
+plot_cells(cds, genes=c("MAGED2", "YPEL3", "IFITM3", "SOCS2", "EVA1B", 
+                        "VIM", "PNRC1", "RBPMS", "SPINT2", "BNIP3L", "ALDH2", 						"NPC2", "EIF3E", "LAPTM5", "ITM2B"), cell_size = 1)+
+                        scale_color_viridis(option = "magma") 
+
+
+##NOTE: +simple theme only removes the legend for colors
+plot_cells(cds, genes = c("PROCR", "MKI67", "CEBPA", "HLF", "MPO", 
+                          "MLLT3"), cell_size = 1)+
+                        scale_color_viridis(option = "magma")+simple_theme
+
+##Can just look at one gene, too
+plot_cells(cds, genes = c("DLK1"), cell_size = 1)+
+           scale_color_viridis(option = "magma")
+

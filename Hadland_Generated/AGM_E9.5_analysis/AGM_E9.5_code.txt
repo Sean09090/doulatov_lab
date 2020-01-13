@@ -1,0 +1,29 @@
+##Clear environment
+rm(list = ls())
+
+##Load monocle3 and all other required packages
+library(monocle3) 
+library(VGAM) 
+library(viridis)
+library(stringr)
+library(tibble)
+library(dplyr)
+library(magrittr)
+library(ggplot2)
+library(reticulate)
+
+## Preprocessing and clustering...
+cds <- load_cellranger_data("~/Downloads/Hadland_Generated/AGM_E9.5")
+RES_DIR <- file.path("~/Downloads/Hadland_Generated/AGM_E9.5_analysis")
+cds = preprocess_cds(cds, num_dim =7)
+cds = reduce_dimension(cds)
+cds <- cluster_cells(cds, resolution = .0009)
+cluster <- clusters(cds)
+pData(cds)$cluster <- cluster
+ 
+## For eventual psuedotime...
+cds <- learn_graph(cds)
+
+## Plotting...
+plot_cells(cds)
+saveRDS(cds, file.path(RES_DIR, "AGM_E9.5_clusters.rds"))
