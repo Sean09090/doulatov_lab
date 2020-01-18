@@ -1,3 +1,6 @@
+
+### CREATING UMAP THROUGH PCA ###
+
 ##Clear environment
 rm(list = ls())
 
@@ -18,7 +21,7 @@ RES_DIR <- file.path("~/doulatov_lab/Hadland_Generated/AGM_E9.5_analysis")
 
 ## Finding number of dimensions...
 cds = preprocess_cds(cds, num_dim=50)
-plot_pc_variance_explained(cds) ## locate plateau in the graph!
+plot_pc_variance_explained(cds) ## locate plateau in the graph! Then preprocess again!
 
 ## Clustering...
 cds = reduce_dimension(cds)
@@ -30,6 +33,32 @@ pData(cds)$cluster <- cluster
 cds <- learn_graph(cds)
 
 ## Plotting...
-plot_cells(cds)
+plot_cells(cds, cell_size = 1, color_cells_by = "cluster")
 saveRDS(cds, file.path(RES_DIR, "AGM_E9.5_clusters.rds"))
+
+##########################################################################################
+##########################################################################################
+
+### ALTERING/ANALYZING THE CLUSTERS ###
+
+##Load monocle3 and all other required packages if app was closed...
+library(monocle3) 
+library(VGAM) 
+library(viridis)
+library(stringr)
+library(tibble)
+library(dplyr)
+library(magrittr)
+library(ggplot2)
+library(reticulate)
+
+## Re-generate clusters from .rds file if app was closed...
+RES_DIR <- file.path("~/doulatov_lab/Hadland_Generated/AGM_E9.5_analysis")
+cds <- readRDS(file.path(RES_DIR, "AGM_E9.5_clusters.rds")) 
+
+## Plot cells by gene expression (Only capitalize first letter -- mouse genes!)...
+plot_cells(cds, genes=c( ... EX: "Cd45"), cell_size = 1)
+
+
+
 
