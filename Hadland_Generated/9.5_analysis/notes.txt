@@ -1,0 +1,63 @@
+### NOTES FOR IDENTIFYING AGM_E9.5 CELL CLUSTERS ###
+
+## 5 clusters:
+
+1) Megakaryocytes?
+Genes expressed:
+"Kitl"(very present)
+"Kdr"(increasing)
+
+2) 
+Genes expressed:
+"Kitl"(somewhat present)
+"Sox17"(increases expression)
+"Kdr"(very present)
+"Cdh5"(increasing)
+
+3) AECs
+Genes expressed:
+"Runx1"(begins increasing) 
+"Kitl"(decreases, no longer present in cluster 4)
+"Notch1"(increases expression)
+"Gfi1"(begins expression)
+"Sox17"(expression increases)
+"Cd93"(expresses fully)
+"Kdr"(decreases)
+"Gata2"(very present)
+"Gja4" and "Gja5"(present - unique to AECs!)
+"Cdh5"(very expressed)
+Notes: 
+- "Runx1" expression marks transition from endothelial cell to hematopoietic 
+	cell.
+
+4) HECs
+Genes expressed: 
+"Runx1"(fully present) 
+"Notch1"(fully present)
+"Gata2"(expression increases)
+"Gfi1"(fully expressed)
+"Sox17"(decreases expression)
+"Kit"(becomes fully expressed)
+Notes:
+- This could represent successful transition from endo-cells to hema-cells
+
+5) 
+Genes expressed: 
+"Kitl"(somewhat present)
+Notes:
+
+All) 
+Genes expressed: 
+"Tek", "Notch1", "Gata2", "Sox17", "Cd93"
+Notes:
+- Notch1, Gata2, Sox17 are in part responsible for transition from endothelial cells to hematopoietic cells
+
+Candidate Cells:
+- Macrophages
+- Stomal Cells
+- Megakaryocytes (create platelets)
+- Perivascular cells
+- Osteolineage cells
+- T-Cells
+- B-Cells
+
