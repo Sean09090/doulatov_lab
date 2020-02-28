@@ -34,7 +34,11 @@ cds <- learn_graph(cds)
 
 ## Plotting...
 plot_cells(cds, cell_size = 1, color_cells_by = "cluster")
+	## If it looks weird, don't exit out of the graph, just punch in the code again...
 saveRDS(cds, file.path(RES_DIR, "clusters.rds"))
+
+## If you want to combine cds...
+cds <- combine_cds(list(cds1, cds2))
 
 ##########################################################################################
 ##########################################################################################
@@ -53,14 +57,14 @@ library(ggplot2)
 library(reticulate)
 
 ## Re-generate clusters from .rds file if app was closed...
-RES_DIR <- file.path("~/doulatov_lab/Hadland_Generated/Analysis")
+RES_DIR <- file.path("~/doulatov_lab/Hadland_Generated/9.5_analysis")
 cds <- readRDS(file.path(RES_DIR, "clusters.rds")) 
 
 ## Plot cells to see clusters...
 plot_cells(cds, cell_size = 1)
 
 ## Find marker genes expressed by each cluster...
-marker_test_res <- top_markers(cds, group_cells_by="partition", reference_cells=1000, cores=8)
+marker_test_res <- top_markers(cds, group_cells_by="cluster", reference_cells=1000, cores=8)
 top_specific_markers <- marker_test_res %>%
                             filter(fraction_expressing >= 0.10) %>%
                             group_by(cell_group) %>%
@@ -88,3 +92,40 @@ plot_cells(cds,
            label_branch_points=FALSE,
            graph_label_size=1.5)
 
+## Create Garnett File to assign cel types...
+
+assigned_type_marker_test_res <- top_markers(cds,
+                                             group_cells_by="cluster",
+                                             reference_cells=1000,
+                                             cores=8)
+
+garnett_markers <- assigned_type_marker_test_res %>%
+                        filter(marker_test_q_value < 0.01 & specificity >= 0.5) %>%
+                        group_by(cell_group) %>%
+                        top_n(5, marker_score)
+
+garnett_markers <- garnett_markers %>% 
+                        group_by(gene_short_name) %>%
+                        filter(n() == 1)
+
+generate_garnett_marker_file(garnett_markers, file="./marker_file.txt")
+
+library(garnett)
+
+colData(cds)$garnett_cluster <- clusters(cds)
+classifier <- train_cell_classifier(cds = cds,
+                                         marker_file = "./marker_file.txt", 
+                                         db=org.Mm.eg.db::org.Mm.eg.db,
+                                         cds_gene_id_type = "ENSEMBL",
+                                         num_unknown = 50,
+                                         marker_file_gene_id_type = "SYMBOL",
+                                         cores=8)
+
+cds <- classify_cells(cds, classifier,
+                      db = org.Ce.Mm.db::org.Mm.eg.db,
+                      cluster_extend = TRUE,
+                      cds_gene_id_type = "ENSEMBL")
+
+plot_cells(cds,
+           group_cells_by="cluster",
+           color_cells_by="cluster_ext_type")
