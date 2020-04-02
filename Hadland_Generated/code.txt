@@ -33,9 +33,6 @@ cds <- cluster_cells(cds, resolution = .0009)
 cluster <- clusters(cds)
 pData(cds)$cluster <- cluster
 
-## ONLY for psuedotime...
-cds <- learn_graph(cds)
-
 ## Plotting...
 plot_cells(cds, cell_size = 1, color_cells_by = "cluster")
 	## If it looks weird, don't exit out of the graph, just punch in the code again...
@@ -46,6 +43,9 @@ saveRDS(cds, file.path(RES_DIR, "clusters.rds"))
 ##########################################################################################
 
 ### ANALYZING/IDENTIFYING THE CLUSTERS ###
+
+##Clear environment
+rm(list = ls())
 
 ##Load monocle3 and all other required packages if app was closed...
 library(monocle3) 
@@ -62,6 +62,9 @@ library(garnett)
 ## Re-generate clusters from .rds file if app was closed...
 RES_DIR <- file.path("~/doulatov_lab/Hadland_Generated/9.5_analysis")
 cds <- readRDS(file.path(RES_DIR, "clusters.rds")) 
+
+## ONLY for psuedotime...
+cds <- learn_graph(cds)
 
 ## Plot cells to see clusters...
 plot_cells(cds, cell_size = 1)
@@ -82,7 +85,6 @@ plot_genes_by_group(cds,
                     max.size=3)
 
 ## Create psuedotime graph...
-
 plot_cells(cds,
            color_cells_by="cluster",
            label_cell_groups=FALSE,
@@ -98,6 +100,9 @@ plot_cells(cds,
            graph_label_size=1.5)
 
 ## Create Garnett File to assign cel types...
+
+## If need to change dir..
+setwd("~/doulatov_lab/Hadland_Generated/9.5_analysis/")
 
 assigned_type_marker_test_res <- top_markers(cds,
                                              group_cells_by="cluster",
@@ -115,9 +120,9 @@ garnett_markers <- garnett_markers %>%
 
 generate_garnett_marker_file(garnett_markers, file="./marker_file.txt")
 
-  ## To read the file...
+## To read the file...
 my_data <- read.delim("./marker_file.txt")
-head(my_data)
+head(my_data, n=20)
 
 colData(cds)$garnett_cluster <- clusters(cds)
 classifier <- train_cell_classifier(cds = cds,
@@ -136,4 +141,5 @@ cds <- classify_cells(cds, classifier,
 plot_cells(cds,
            group_cells_by="cluster",
            color_cells_by="cluster_ext_type")
+
 
