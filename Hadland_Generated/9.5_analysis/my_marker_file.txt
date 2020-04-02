@@ -1,0 +1,11 @@
+> Cell.type.1
+expressed: Kitl, Kdr, Aplnr
+> Cell.type.2
+expressed: Kdr, Sox17, Cdh5, Vwa1, Esm1
+> Cell.type.3
+expressed: Runx1, Sox17, Cdh5, Gja4, Gja5, Notch1, Sat1 
+> Cell.type.4
+expressed: Runx1, Gata2, Kit, Coro1a, Nupr1, Spi1, Ikzf2
+> Cell.type.5
+expressed: Kitl, Nnat, Gpc3, Crabp2, Ptn, Cadm1, Crabp1, Igdcc3, Spsb4
+

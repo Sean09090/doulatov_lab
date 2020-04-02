@@ -1,0 +1,15 @@
+> Cell type 3
+expressed: Sat1, Tm4sf1, Gja5, Tmem100, Edn1
+
+> Cell type 4
+expressed: Ikzf2, Spi1, Cebpb, Gfi1, Alox5ap, Nupr1, Coro1a, Lyz2, Adgrg1, Runx1
+
+> Cell type 1
+expressed: Aplnr
+
+> Cell type 5
+expressed: Nnat, Gpc3, Crabp2, Ptn, Cadm1, Crabp1, Igdcc3, Spsb4, Eno3, Gas1
+
+> Cell type 2
+expressed: Vwa1, Esm1
+
